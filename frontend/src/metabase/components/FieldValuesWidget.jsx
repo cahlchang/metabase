@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { t } from "c-3po";
 
 import TokenField from "metabase/components/TokenField";
 import RemappedValue from "metabase/containers/RemappedValue";
@@ -18,8 +19,7 @@ const mapDispatchToProps = {
   fetchFieldValues,
 };
 
-@connect(null, mapDispatchToProps)
-export default class FieldValuesWidget extends Component {
+export class FieldValuesWidget extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -269,3 +269,5 @@ export default class FieldValuesWidget extends Component {
     );
   }
 }
+
+export default connect(null, mapDispatchToProps)(FieldValuesWidget);

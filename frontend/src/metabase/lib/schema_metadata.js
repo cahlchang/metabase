@@ -6,7 +6,6 @@ import {
   isPK as isTypePK,
   TYPE,
 } from "metabase/lib/types";
-import { getFieldValues } from "metabase/lib/query/field";
 
 // primary field types used for picking operators, etc
 export const NUMBER = "NUMBER";
