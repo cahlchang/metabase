@@ -25,7 +25,7 @@ import StructuredQuery from "metabase-lib/lib/queries/StructuredQuery";
 import type {
   Filter,
   FieldFilter,
-  ConcreteField,
+  ConcreteField
 } from "metabase/meta/types/Query";
 import type { Operator } from "metabase/meta/types/Metadata";
 
@@ -36,11 +36,11 @@ type Props = {
   query: StructuredQuery,
   filter?: Filter,
   onCommitFilter: (filter: Filter) => void,
-  onClose: () => void,
+  onClose: () => void
 };
 
 type State = {
-  filter: FieldFilter,
+  filter: FieldFilter
 };
 
 export default class FilterPopover extends Component {
@@ -53,6 +53,7 @@ export default class FilterPopover extends Component {
     this.state = {
       // $FlowFixMe
       filter: props.filter || [],
+      showOperator: false
     };
   }
 
@@ -195,21 +196,21 @@ export default class FilterPopover extends Component {
     let { filter } = this.state;
     // $FlowFixMe
     this.setState({
-      filter: [...filter.slice(0, 1), null, ...filter.slice(2)],
+      filter: [...filter.slice(0, 1), null, ...filter.slice(2)]
     });
   };
 
   renderPicker(filter: FieldFilter, field: Field) {
     let operator: ?Operator = field.operators_lookup[filter[0]];
-    return (
-      operator &&
+    return operator &&
       operator.fields.map((operatorField, index) => {
         if (!operator) {
           return null;
         }
         let values, onValuesChange;
-        let placeholder =
-          (operator && operator.placeholders && operator.placeholders[index]) ||
+        let placeholder = (operator &&
+          operator.placeholders &&
+          operator.placeholders[index]) ||
           undefined;
         if (operator.multi) {
           values = this.state.filter.slice(2);
@@ -276,8 +277,7 @@ export default class FilterPopover extends Component {
             {operator.multi ? t`true` : t`false`}
           </span>
         );
-      })
-    );
+      });
   }
 
   onCommit = () => {
@@ -314,10 +314,12 @@ export default class FilterPopover extends Component {
           style={{
             minWidth: 300,
             // $FlowFixMe
-            maxWidth: dimension.field().isDate() ? null : 500,
+            maxWidth: dimension.field().isDate() ? null : 500
           }}
         >
-          <div className="FilterPopover-header border-bottom text-grey-3 p1 mt1 flex align-center">
+          <div
+            className="FilterPopover-header border-bottom text-grey-3 p1 mt1 flex align-center"
+          >
             <a
               className="cursor-pointer text-purple-hover transition-color flex align-center"
               onClick={this.clearField}
@@ -329,29 +331,36 @@ export default class FilterPopover extends Component {
             </a>
             <h3 className="mx1">-</h3>
             <h3 className="text-default">{formatField(field)}</h3>
+
+            <a
+              className="ml-auto text-purple"
+              onClick={() =>
+                this.setState({ showOperator: !this.state.showOperator })}
+            >
+              {t`Options`}
+            </a>
           </div>
-          {isTime(field) ? (
-            <TimePicker
-              className="mt1 border-top"
-              filter={filter}
-              onFilterChange={this.setFilter}
-            />
-          ) : isDate(field) ? (
-            <DatePicker
-              className="mt1 border-top"
-              filter={filter}
-              onFilterChange={this.setFilter}
-            />
-          ) : (
-            <div>
-              <OperatorSelector
-                operator={filter[0]}
-                operators={field.operators}
-                onOperatorChange={this.setOperator}
+          {isTime(field)
+            ? <TimePicker
+                className="mt1 border-top"
+                filter={filter}
+                onFilterChange={this.setFilter}
               />
-              {this.renderPicker(filter, field)}
-            </div>
-          )}
+            : isDate(field)
+                ? <DatePicker
+                    className="mt1 border-top"
+                    filter={filter}
+                    onFilterChange={this.setFilter}
+                  />
+                : <div>
+                    {this.state.showOperator &&
+                      <OperatorSelector
+                        operator={filter[0]}
+                        operators={field.operators}
+                        onOperatorChange={this.setOperator}
+                      />}
+                    {this.renderPicker(filter, field)}
+                  </div>}
           <div className="FilterPopover-footer border-top flex align-center p2">
             <FilterOptions
               filter={filter}
@@ -367,7 +376,7 @@ export default class FilterPopover extends Component {
             <button
               data-ui-tag="add-filter"
               className={cx("Button Button--purple ml-auto", {
-                disabled: !this.isValid(),
+                disabled: !this.isValid()
               })}
               onClick={() => this.commitFilter(this.state.filter)}
             >
