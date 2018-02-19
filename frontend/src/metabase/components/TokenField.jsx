@@ -17,13 +17,13 @@ import {
   KEYCODE_TAB,
   KEYCODE_UP,
   KEYCODE_DOWN,
-  KEYCODE_BACKSPACE,
+  KEYCODE_BACKSPACE
 } from "metabase/lib/keyboard";
 import { isObscured } from "metabase/lib/dom";
 
 const inputBoxClasses = cxs({
   maxHeight: "130px",
-  overflow: "scroll",
+  overflow: "scroll"
 });
 
 // somewhat matches react-select's API: https://github.com/JedWatson/react-select
@@ -35,7 +35,7 @@ export default class TokenField extends Component {
       inputValue: "",
       filteredOptions: [],
       selectedOptionValue: null,
-      focused: props.autoFocus,
+      focused: props.autoFocus
     };
   }
 
@@ -52,12 +52,12 @@ export default class TokenField extends Component {
     valueKey: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-      PropTypes.func,
+      PropTypes.func
     ]),
     labelKey: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.number,
-      PropTypes.func,
+      PropTypes.func
     ]),
 
     removeSelected: PropTypes.bool,
@@ -73,7 +73,7 @@ export default class TokenField extends Component {
 
     valueRenderer: PropTypes.func.isRequired, // TODO: default
     optionRenderer: PropTypes.func.isRequired, // TODO: default
-    layoutRenderer: PropTypes.func,
+    layoutRenderer: PropTypes.func
   };
 
   static defaultProps = {
@@ -85,7 +85,7 @@ export default class TokenField extends Component {
     valueRenderer: value => <span>{value}</span>,
     optionRenderer: option => <span>{option}</span>,
 
-    color: "brand",
+    color: "brand"
   };
 
   componentWillMount() {
@@ -99,9 +99,9 @@ export default class TokenField extends Component {
   setInputValue(inputValue) {
     this.setState(
       {
-        inputValue,
+        inputValue
       },
-      this._updateFilteredValues,
+      this._updateFilteredValues
     );
   }
 
@@ -141,22 +141,21 @@ export default class TokenField extends Component {
 
     let filteredOptions = options.filter(
       option =>
-        // filter out options who have already been selected, unless:
-        // remove selected is disabled
+      // filter out options who have already been selected, unless:
+      // remove selected is disabled
         (!removeSelected ||
           // or it's not in the selectedValues
           !selectedValues.has(JSON.stringify(this._value(option))) ||
           // or it's the current "freeform" value, which updates as we type
           (this._isLastFreeformValue(this._value(option)) &&
             this._isLastFreeformValue(inputValue))) &&
-        this.filterOption(option, inputValue),
+        this.filterOption(option, inputValue)
     );
 
     if (
       selectedOptionValue == null ||
       !_.find(filteredOptions, option =>
-        this._valueIsEqual(selectedOptionValue, this._value(option)),
-      )
+        this._valueIsEqual(selectedOptionValue, this._value(option)))
     ) {
       // if there are results based on the user's typing...
       if (filteredOptions.length > 0) {
@@ -169,7 +168,7 @@ export default class TokenField extends Component {
 
     this.setState({
       filteredOptions,
-      selectedOptionValue,
+      selectedOptionValue
     });
   };
 
@@ -177,7 +176,7 @@ export default class TokenField extends Component {
     const {
       updateOnInputChange,
       onInputChange,
-      parseFreeformValue,
+      parseFreeformValue
     } = this.props;
 
     if (onInputChange) {
@@ -228,22 +227,20 @@ export default class TokenField extends Component {
       // up arrow
       event.preventDefault();
       let index = _.findIndex(filteredOptions, option =>
-        this._valueIsEqual(selectedOptionValue, this._value(option)),
-      );
+        this._valueIsEqual(selectedOptionValue, this._value(option)));
       if (index > 0) {
         this.setState({
-          selectedOptionValue: this._value(filteredOptions[index - 1]),
+          selectedOptionValue: this._value(filteredOptions[index - 1])
         });
       }
     } else if (keyCode === KEYCODE_DOWN) {
       // down arrow
       event.preventDefault();
       let index = _.findIndex(filteredOptions, option =>
-        this._valueIsEqual(selectedOptionValue, this._value(option)),
-      );
+        this._valueIsEqual(selectedOptionValue, this._value(option)));
       if (index >= 0 && index < filteredOptions.length - 1) {
         this.setState({
-          selectedOptionValue: this._value(filteredOptions[index + 1]),
+          selectedOptionValue: this._value(filteredOptions[index + 1])
         });
       }
     } else if (keyCode === KEYCODE_BACKSPACE) {
@@ -266,9 +263,12 @@ export default class TokenField extends Component {
     if (this.props.onBlur) {
       this.props.onBlur();
     }
-    setTimeout(() => {
-      this.setState({ focused: false });
-    }, 100);
+    setTimeout(
+      () => {
+        this.setState({ focused: false });
+      },
+      100
+    );
   };
 
   onInputPaste = e => {
@@ -307,8 +307,7 @@ export default class TokenField extends Component {
     const { selectedOptionValue } = this.state;
     let input = findDOMNode(this.refs.input);
     let option = _.find(this.state.filteredOptions, option =>
-      this._valueIsEqual(selectedOptionValue, this._value(option)),
-    );
+      this._valueIsEqual(selectedOptionValue, this._value(option)));
     if (option) {
       this.addOption(option);
       // clear the input if the option is the same as the last value
@@ -399,13 +398,13 @@ export default class TokenField extends Component {
       layoutRenderer,
       color,
       parseFreeformValue,
-      updateOnInputChange,
+      updateOnInputChange
     } = this.props;
     let {
       inputValue,
       filteredOptions,
       focused,
-      selectedOptionValue,
+      selectedOptionValue
     } = this.state;
 
     if (!multi && focused) {
@@ -442,11 +441,11 @@ export default class TokenField extends Component {
     const valuesList = (
       <ul
         className={cx(
-          "m1 p0 pb1 bordered rounded flex flex-wrap bg-white",
+          "m1 p0 pb1 bordered rounded flex flex-wrap bg-white scroll-x scroll-y",
           inputBoxClasses,
           {
-            [`border-grey-2`]: this.state.focused,
-          },
+            [`border-grey-2`]: this.state.focused
+          }
         )}
         style={this.props.style}
         onMouseDownCapture={this.onMouseDownCapture}
@@ -487,9 +486,9 @@ export default class TokenField extends Component {
       </ul>
     );
 
-    const optionsList =
-      filteredOptions.length === 0 ? null : (
-        <ul
+    const optionsList = filteredOptions.length === 0
+      ? null
+      : <ul
           className="ml1 scroll-y scroll-show"
           style={{ maxHeight: 300 }}
           onMouseEnter={() => this.setState({ listIsHovered: true })}
@@ -500,20 +499,19 @@ export default class TokenField extends Component {
               <div
                 ref={
                   this._valueIsEqual(selectedOptionValue, this._value(option))
-                    ? _ => (this.scrollElement = _)
+                    ? _ => this.scrollElement = _
                     : null
                 }
                 className={cx(
                   `py1 pl1 pr2 block rounded text-bold text-${color}-hover inline-block full cursor-pointer`,
                   `bg-grey-0-hover`,
                   {
-                    [`text-${color} bg-grey-0`]:
-                      !this.state.listIsHovered &&
+                    [`text-${color} bg-grey-0`]: !this.state.listIsHovered &&
                       this._valueIsEqual(
                         selectedOptionValue,
-                        this._value(option),
-                      ),
-                  },
+                        this._value(option)
+                      )
+                  }
                 )}
                 onClick={e => {
                   this.addOption(option);
@@ -524,26 +522,27 @@ export default class TokenField extends Component {
               </div>
             </li>
           ))}
-        </ul>
-      );
+        </ul>;
 
     return layoutRenderer({
       valuesList,
       optionsList,
       focused,
-      onClose: this.onClose,
+      onClose: this.onClose
     });
   }
 }
 
 const dedup = array => Array.from(new Set(array));
 
-const DefaultTokenFieldLayout = ({
-  valuesList,
-  optionsList,
-  focused,
-  onClose,
-}) => (
+const DefaultTokenFieldLayout = (
+  {
+    valuesList,
+    optionsList,
+    focused,
+    onClose
+  }
+) => (
   <OnClickOutsideWrapper handleDismissal={onClose}>
     <div>
       {valuesList}
@@ -553,7 +552,7 @@ const DefaultTokenFieldLayout = ({
         tetherOptions={{
           attachment: "top left",
           targetAttachment: "bottom left",
-          targetOffset: "10 0",
+          targetOffset: "10 0"
         }}
       >
         {optionsList}
@@ -566,5 +565,5 @@ DefaultTokenFieldLayout.propTypes = {
   valuesList: PropTypes.element.isRequired,
   optionsList: PropTypes.element,
   focused: PropTypes.bool,
-  onClose: PropTypes.func,
+  onClose: PropTypes.func
 };
