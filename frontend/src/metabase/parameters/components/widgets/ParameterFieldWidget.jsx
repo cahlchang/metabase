@@ -18,12 +18,12 @@ type Props = {
   isEditing: boolean,
 
   field: Field,
-  parentFocusChanged: boolean => void,
+  parentFocusChanged: (boolean) => void
 };
 
 type State = {
   value: any[],
-  isFocused: boolean,
+  isFocused: boolean
 };
 
 // TODO: rename this something else since we're using it for more than searching and more than text
@@ -35,7 +35,7 @@ export default class ParameterFieldWidget extends Component<*, Props, State> {
     super(props);
     this.state = {
       isFocused: false,
-      value: props.value,
+      value: props.value
     };
   }
 
@@ -82,11 +82,9 @@ export default class ParameterFieldWidget extends Component<*, Props, State> {
     if (!isFocused) {
       return (
         <div className="flex-full" onClick={() => focusChanged(true)}>
-          {value.length > 0 ? (
-            ParameterFieldWidget.format(value, field)
-          ) : (
-            <span>{placeholder}</span>
-          )}
+          {value.length > 0
+            ? ParameterFieldWidget.format(value, field)
+            : <span>{placeholder}</span>}
         </div>
       );
     } else {
@@ -95,7 +93,7 @@ export default class ParameterFieldWidget extends Component<*, Props, State> {
           tetherOptions={{
             attachment: "top left",
             targetAttachment: "top left",
-            targetOffset: "-15 -25",
+            targetOffset: "-15 -25"
           }}
           hasArrow={false}
           onClose={() => focusChanged(false)}
@@ -113,19 +111,21 @@ export default class ParameterFieldWidget extends Component<*, Props, State> {
             color="brand"
             style={{
               borderWidth: 2,
-              minWidth: 182,
+              minWidth: 182
             }}
           />
-          <Button
-            primary
-            className="m1"
-            onClick={() => {
-              setValue(value.length > 0 ? value : null);
-              focusChanged(false);
-            }}
-          >
-            Done
-          </Button>
+          <div className="flex p1">
+            <Button
+              primary
+              className="ml-auto"
+              onClick={() => {
+                setValue(value.length > 0 ? value : null);
+                focusChanged(false);
+              }}
+            >
+              Done
+            </Button>
+          </div>
         </Popover>
       );
       // return (
